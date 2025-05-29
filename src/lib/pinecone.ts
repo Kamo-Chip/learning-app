@@ -2,10 +2,9 @@ import {
   Document,
   RecursiveCharacterTextSplitter,
 } from "@pinecone-database/doc-splitter";
-import { Pinecone } from "@pinecone-database/pinecone";
+import { Pinecone, PineconeRecord } from "@pinecone-database/pinecone";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { embedDocument } from "./embeddings";
-import { convertToAscii } from "./utils";
 
 export const getPineconeClient = () => {
   return new Pinecone({ apiKey: process.env.PINECONE_API_KEY as string });
@@ -16,16 +15,18 @@ export const truncateStringByBytes = (str: string, bytes: number) => {
   return new TextDecoder("utf-8").decode(enc.encode(str).slice(0, bytes));
 };
 
-const prepareDocument = async (page: any) => {
-  let { pageContent, metadata } = page;
+const prepareDocument = async (page: Document) => {
+  let { pageContent } = page;
+  const { metadata } = page;
   pageContent = pageContent.replace(/\n/g, "");
+  const loc = metadata.loc as { pageNumber: number };
 
   const splitter = new RecursiveCharacterTextSplitter();
   const docs = await splitter.splitDocuments([
     new Document({
       pageContent,
       metadata: {
-        pageNumber: metadata.loc.pageNumber,
+        pageNumber: loc.pageNumber,
         text: truncateStringByBytes(pageContent, 36000),
       },
     }),
@@ -34,7 +35,7 @@ const prepareDocument = async (page: any) => {
 };
 
 // A helper function that breaks an array into chunks of size batchSize
-const chunks = (array: any[], batchSize = 100) => {
+const chunks = (array: PineconeRecord[], batchSize = 100) => {
   const chunks = [];
 
   for (let i = 0; i < array.length; i += batchSize) {
@@ -83,15 +84,18 @@ export const loadDocumentIntoPinecone = async (
       for (const chunk of chunkedVectors) {
         await namespace.upsert(chunk);
       }
-    } catch (error: any) {
-      console.log(error.message);
+    } catch (error) {
+      console.log(error instanceof Error ? error.message : error);
     }
     console.log("Finished loading into pinecone");
 
     return documents;
-  } catch (error: any) {
-    console.log("Could not load file into pinecone: ", error.message);
-    throw new Error("Could not load file into pinecone: ", error.message);
+  } catch (error) {
+    console.log(
+      "Could not load file into pinecone: ",
+      error instanceof Error ? error.message : error
+    );
+    throw new Error("Something went wrong");
   }
 };
 
@@ -102,12 +106,11 @@ export const deleteRecords = async (idPrefix: string) => {
     const pineconeIndex = client.index(process.env.PINECONE_INDEX!);
     const namespace = pineconeIndex.namespace(process.env.PINECONE_NAMESPACE!);
 
-
     let pageList = await namespace.listPaginated({ prefix: `${idPrefix}#` });
 
     if (!pageList.vectors) return;
 
-    let vectorIds = pageList.vectors.map((vector) => vector.id);
+    const vectorIds = pageList.vectors.map((vector) => vector.id);
 
     vectorIds.push(...pageList.vectors.map((vector) => vector.id));
 

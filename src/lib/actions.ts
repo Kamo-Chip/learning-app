@@ -1,8 +1,7 @@
 "use server";
 
-import { getContext } from "./context";
-import { loadDocumentIntoPinecone } from "./pinecone";
 import { v4 as uuidv4 } from "uuid";
+import { loadDocumentIntoPinecone } from "./pinecone";
 
 export const processSources = async (formState: string, formData: FormData) => {
   const fields = Object.fromEntries(formData.entries());

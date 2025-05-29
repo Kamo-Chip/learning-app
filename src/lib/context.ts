@@ -33,8 +33,8 @@ export const getMatchesFromEmbeddings = async (
     }
 
     return queryResult.matches || [];
-  } catch (e: any) {
-    console.log("Error querying embeddings: ", e.message);
+  } catch (e) {
+    console.log("Error querying embeddings: ", e instanceof Error ? e.message : e);
     throw e;
   }
 };
@@ -57,10 +57,10 @@ export const getContext = async (
       (match) => match.score && match.score > 0.63
     );
 
-    let docs = qualifyingDocs.map((match) => match?.metadata?.text);
+    const docs = qualifyingDocs.map((match) => match?.metadata?.text);
     return docs.join("\n").substring(0, 50000);
-  } catch (e: any) {
-    console.log("Error getting context: ", e.message);
+  } catch (e) {
+    console.log("Error getting context: ", e instanceof Error ? e.message : e);
     return "";
   }
 };
