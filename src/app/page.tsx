@@ -1,5 +1,6 @@
 import UploadFile from "@/components/forms/upload-file";
-import { getContext } from "@/lib/context";
+import { Button } from "@/components/ui/button";
+import { getContext } from "@/lib/rag/context";
 
 export default function Home() {
   return (
@@ -22,7 +23,7 @@ export default function Home() {
           }
         }}
       >
-        <button>Get context</button>
+        <Button>Get context</Button>
       </form>
     </div>
   );

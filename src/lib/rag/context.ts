@@ -1,7 +1,6 @@
 import { RecordValues } from "@pinecone-database/pinecone";
 import { getEmbeddings } from "./embeddings";
 import { getPineconeClient } from "./pinecone";
-import { convertToAscii } from "./utils";
 
 export const getMatchesFromEmbeddings = async (
   embeddings: RecordValues,
@@ -13,7 +12,7 @@ export const getMatchesFromEmbeddings = async (
     const pinecone = getPineconeClient();
 
     const index = pinecone.index(process.env.PINECONE_INDEX!);
-    const namespace = index.namespace(convertToAscii(namespaceToAccess));
+    const namespace = index.namespace(namespaceToAccess);
 
     let queryResult;
 
@@ -34,7 +33,10 @@ export const getMatchesFromEmbeddings = async (
 
     return queryResult.matches || [];
   } catch (e) {
-    console.log("Error querying embeddings: ", e instanceof Error ? e.message : e);
+    console.log(
+      "Error querying embeddings: ",
+      e instanceof Error ? e.message : e
+    );
     throw e;
   }
 };
