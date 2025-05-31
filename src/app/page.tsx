@@ -1,6 +1,7 @@
 import UploadFile from "@/components/forms/upload-file";
 import { Button } from "@/components/ui/button";
 import { getContext } from "@/lib/rag/context";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -25,6 +26,7 @@ export default function Home() {
       >
         <Button>Get context</Button>
       </form>
+      <Link href="exercise">Go to exercise</Link>
     </div>
   );
 }

@@ -7,7 +7,7 @@ type QuestionBase = {
 
 export type MultipleChoiceQuestion = QuestionBase & {
   type: "multiple_choice";
-  options: string[];
+  options: Record<string, string>;
 };
 
 export type ShortAnswerQuestion = QuestionBase & {

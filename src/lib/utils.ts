@@ -51,7 +51,7 @@ Each exercise must include a "type" field with one of:
     {
       "type": "multiple_choice",
       "question": "...",
-      "options": ["A": {".."}, "B": {".."}, "C": {".."},"D": {".."}],
+      "options": {"A": "..", "B": "..", "C": "..","D": ".."},
       "answer": "A",
       "hint": "...",
       "explanation": "..."
