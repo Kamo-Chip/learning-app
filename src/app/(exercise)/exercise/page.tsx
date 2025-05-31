@@ -1,15 +1,13 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Question } from "@/lib/types";
-import { Lightbulb, LightbulbIcon } from "lucide-react";
+import { LightbulbIcon } from "lucide-react";
 import { cookies } from "next/headers";
 
 async function Page() {
