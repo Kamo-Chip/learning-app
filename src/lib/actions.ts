@@ -5,6 +5,7 @@ import { loadDocumentIntoPinecone } from "./rag/pinecone";
 import OpenAI from "openai";
 import { SYSTEM_PROMPT } from "./utils";
 import { cookies } from "next/headers";
+import { FormState } from "./types";
 
 const client = new OpenAI();
 export const processSources = async (formState: string, formData: FormData) => {
@@ -47,22 +48,43 @@ const uploadToPinecone = async (
 
 export async function createNewExercise(
   sources: File[],
-  formState: string,
+  formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   const fields = Object.fromEntries(formData.entries());
   console.log(sources);
   console.log(JSON.stringify(fields));
 
-  const response = await client.responses.create({
-    model: "gpt-4.1",
-    instructions: SYSTEM_PROMPT,
-    input: `${JSON.stringify(fields)}`,
-  });
+  try {
+    console.log("Generating exercise...");
+    const response = await client.responses.create({
+      model: "gpt-4.1",
+      instructions: SYSTEM_PROMPT,
+      input: `${JSON.stringify(fields)}`,
+    });
 
-  console.log(response.output_text);
+    const jsonResponse = JSON.parse(response.output_text);
+    jsonResponse["id"] = uuidv4();
+    jsonResponse["createdAt"] = new Date();
 
-  const cookieStore = await cookies();
-  cookieStore.set("recent_gen_exercise", response.output_text);
-  return "";
+    console.log(jsonResponse);
+
+    const cookieStore = await cookies();
+    cookieStore.set("recent_gen_exercise", JSON.stringify(jsonResponse));
+
+    return {
+      message: "Successfully created exercise",
+      data: JSON.stringify(jsonResponse),
+      error: false,
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
+    console.error(message);
+    return {
+      message: message,
+      data: null,
+      error: true,
+    };
+  }
 }

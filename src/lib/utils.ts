@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { FormState } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -16,7 +17,7 @@ When given this input:
   "additional_instructions": "<Additional instructions>",
   "information_from_sources": "<Chunk of information>"
 }
-You must return a JSON object with exactly number_of_questions exercises on topic, appropriate to the given skill_level, obeying the additional_instructions, and grounded in the information provided, if it is given.
+You must return a JSON object with exactly number_of_questions exercises on topic, appropriate to the given skill_level, obeying the additional_instructions, and grounded in the information provided, if it is given. Create a relevant short title and place it in the title field, no more than 20 characters.
 
 Each exercise must include a "type" field with one of:
 - "multiple_choice"
@@ -47,6 +48,7 @@ Each exercise must include a "type" field with one of:
 
 **Output format**
 {
+  "title": "...",
   "exercises": [
     {
       "type": "multiple_choice",
@@ -75,3 +77,9 @@ Each exercise must include a "type" field with one of:
   ]
 }
 `;
+
+export const EMPTY_FORM_STATE: FormState = {
+  message: "",
+  data: null,
+  error: false,
+};

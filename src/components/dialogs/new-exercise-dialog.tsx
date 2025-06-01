@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import clsx from "clsx";
 import { PlusIcon, XIcon } from "lucide-react";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -22,17 +22,41 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { createNewExercise } from "@/lib/actions";
+import { EMPTY_FORM_STATE } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { ExerciseSet } from "@/lib/types";
 
 const MAX_SOURCES = 3;
 
 function NewExerciseDialog({ trigger }: { trigger: React.ReactElement }) {
   const [sources, setSources] = useState<File[]>([]);
-  const [, action, isPending] = useActionState(
+  const [state, action, isPending] = useActionState(
     createNewExercise.bind(null, sources),
-    ""
+    EMPTY_FORM_STATE
   );
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.data) {
+      const newExercise: ExerciseSet = JSON.parse(state.data); // Parse it into an object
+      const existing = localStorage.getItem("exercises");
+      if (existing) {
+        const exercises = JSON.parse(existing);
+        exercises.push(newExercise);
+        localStorage.setItem("exercises", JSON.stringify(exercises));
+      } else {
+        localStorage.setItem("exercises", JSON.stringify([newExercise]));
+      }
+      setOpen(false);
+
+      window.dispatchEvent(new Event("exercises-updated"));
+      router.push(`/exercise/${newExercise.id}`);
+    }
+  }, [state, router]);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>

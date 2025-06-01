@@ -23,3 +23,16 @@ export type Question =
   | MultipleChoiceQuestion
   | ShortAnswerQuestion
   | CodingQuestion;
+
+export type FormState = {
+  message: string;
+  data: unknown;
+  error: boolean;
+};
+
+export type ExerciseSet = {
+    id: string;
+    title: string;
+    exercises: Question[];
+  };
+  
