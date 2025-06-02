@@ -26,7 +26,7 @@ export type Question =
 
 export type FormState = {
   message: string;
-  data: unknown;
+  data: string;
   error: boolean;
 };
 

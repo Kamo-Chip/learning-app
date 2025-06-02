@@ -80,6 +80,6 @@ Each exercise must include a "type" field with one of:
 
 export const EMPTY_FORM_STATE: FormState = {
   message: "",
-  data: null,
+  data: "",
   error: false,
 };

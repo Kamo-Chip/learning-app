@@ -83,7 +83,7 @@ export async function createNewExercise(
     console.error(message);
     return {
       message: message,
-      data: null,
+      data: "",
       error: true,
     };
   }

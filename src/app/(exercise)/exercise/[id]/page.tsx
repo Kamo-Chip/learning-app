@@ -6,16 +6,18 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ExerciseSet, Question } from "@/lib/types";
 import { LightbulbIcon } from "lucide-react";
-import { useState, useEffect } from "react";
-function Page({ params }: { params: { id: string } }) {
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+function Page() {
   const [exercises, setExercises] = useState<ExerciseSet[]>([]);
   const [exercise, setExercise] = useState<ExerciseSet>();
+  const params = useParams();
 
   useEffect(() => {
     setExercises(JSON.parse(localStorage.getItem("exercises") || "[]"));
