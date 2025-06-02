@@ -3,6 +3,7 @@ type QuestionBase = {
   hint?: string;
   explanation: string;
   answer: string;
+  userAnswer?: string; 
 };
 
 export type MultipleChoiceQuestion = QuestionBase & {
@@ -31,8 +32,10 @@ export type FormState = {
 };
 
 export type ExerciseSet = {
-    id: string;
-    title: string;
-    exercises: Question[];
-  };
-  
+  id: string;
+  title: string;
+  createdAt: string;
+  exercises: Question[];
+  isFinished?: boolean;
+
+};

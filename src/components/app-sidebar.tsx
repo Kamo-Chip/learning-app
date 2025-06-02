@@ -44,7 +44,7 @@ function AppSideBar() {
       const stored = localStorage.getItem("exercises");
       setExercises(stored ? JSON.parse(stored) : []);
     }
-  }, [query, exercises]);
+  }, [query]);
 
   useEffect(() => {
     const stored = localStorage.getItem("exercises");
@@ -94,7 +94,7 @@ function AppSideBar() {
                     value={query}
                     onChange={handleChange}
                     placeholder="Search your exercises..."
-                    className="border-none shadow-none p-0 focus-visible:border-none! focus-visible:ring-0!"
+                    className="border-none shadow-none p-0 bg-transparent! focus-visible:border-none! focus-visible:ring-0!"
                   />
                   {query && (
                     <button className="p-0" onClick={() => setQuery("")}>

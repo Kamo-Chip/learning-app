@@ -2,7 +2,6 @@ import AppSideBar from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import ExerciseHeader from "./exercise-header";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
@@ -16,13 +15,12 @@ async function Layout({ children }: { children: React.ReactNode }) {
           <SidebarTrigger />
           <ExerciseHeader />
         </div>
-        <ScrollArea
+        <div
+          id="scroll-area"
           className="overflow-y-auto h-[calc(100vh-44.9px)]"
-          type="always"
-          color="red"
         >
           {children}
-        </ScrollArea>
+        </div>
       </main>
     </SidebarProvider>
   );
