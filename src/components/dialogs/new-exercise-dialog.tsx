@@ -164,8 +164,8 @@ function NewExerciseDialog({ trigger }: { trigger: React.ReactElement }) {
               ))}
             </div>
           </div>
-          <Button disabled={isPending}>
-            {isPending ? "Generating..." : "Create Exercise"}
+          <Button disabled={isPending} className="w-fit mx-auto">
+            {isPending ? "Generating..." : "Create"}
           </Button>
         </form>
       </DialogContent>

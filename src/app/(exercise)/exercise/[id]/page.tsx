@@ -1,13 +1,13 @@
 "use client";
 
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -15,9 +15,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ExerciseSet, Question } from "@/lib/types";
 import { LightbulbIcon } from "lucide-react";
@@ -118,28 +118,34 @@ function Page() {
     if (exercises.length) {
       setExercise(exercises.find((item) => item.id === params.id));
     }
-
-    setIsLoading(false);
   }, [exercises, params.id]);
 
   useEffect(() => {
-    setIsFinished(!!exercise?.isFinished);
-
-    setAnswers(
-      exercise ? exercise.exercises.map((item) => item.userAnswer || "") : []
-    );
+    if (exercise) {
+      setIsFinished(!!exercise.isFinished);
+      setAnswers(exercise.exercises.map((item) => item.userAnswer || ""));
+    }
+    setTimeout(() => {
+        console.log(exercise);
+      setIsLoading(false);
+    }, 1000);
   }, [exercise]);
 
   useEffect(() => {
     setExercises(JSON.parse(localStorage.getItem("exercises") || "[]"));
   }, []);
 
-  if (!exercise && isLoading) return <span>Loading...</span>;
+  if (!exercise && isLoading)
+    return (
+      <div className="m-auto flex flex-col items-center">
+        <img src="/assets/loading-spinner.svg" className="w-16 h-16" />
+      </div>
+    );
 
-  if (!exercise && !isLoading) return <span>{"Could not find exercise"}</span>;
+  if (!exercise && !isLoading) return <span className="m-auto">{"Could not find exercise 🤷🏾‍♂️"}</span>;
 
   return (
-    <div className="py-8 px-64">
+    <div className="py-8 px-56">
       <div className="grid grid-cols-1">
         {exercise?.exercises.map((question: Question, idx) => (
           <div key={`${question}${idx}`}>
@@ -162,7 +168,7 @@ function Page() {
                     {Object.keys(question.options).map((option) => (
                       <div
                         key={`${question.question}-${option}`}
-                        className="flex gap-2"
+                        className="flex gap-2 items-center"
                       >
                         <RadioGroupItem
                           disabled={isFinished}
@@ -170,7 +176,10 @@ function Page() {
                           id={`${question.question}-${option}`}
                           onClick={(e) => handleChange(e, idx)}
                         />
-                        <Label htmlFor={`${question.question}-${option}`}>
+                        <Label
+                          htmlFor={`${question.question}-${option}`}
+                          className="leading-snug"
+                        >
                           {question.options[option]}
                         </Label>
                       </div>
@@ -205,7 +214,7 @@ function Page() {
                   </div>
                 )}
                 {isFinished && (
-                  <div className="border-pink-500 border rounded-md p-4 bg-pink-300/30 flex flex-col gap-2">
+                  <div className="border-pink-500 border rounded-md p-4 bg-pink-300/30 flex flex-col gap-2 relative">
                     <div>
                       <p className="text-sm">Answer</p>
                       {question.type == "multiple_choice" ? (
@@ -245,7 +254,6 @@ function Page() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              {/* <AlertDialogCancel>Cancel</AlertDialogCancel> */}
               <AlertDialogAction>Alright man</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

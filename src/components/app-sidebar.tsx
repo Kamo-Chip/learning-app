@@ -65,9 +65,9 @@ function AppSideBar() {
   }, []);
 
   return (
-    <Sidebar variant="floating" >
+    <Sidebar variant="sidebar">
       <SidebarHeader className="text-center text-xl font-medium">
-        🧠 EZ 100 
+        🧠 EZ 100
       </SidebarHeader>
       <SidebarContent className="px-1">
         <SidebarGroup>
@@ -118,6 +118,7 @@ function AppSideBar() {
                   <SidebarMenuButton
                     asChild
                     isActive={params.id === exercise.id}
+                    className="truncate font-medium"
                   >
                     <Link href={`/exercise/${exercise.id}`}>
                       <span>{exercise.title}</span>
