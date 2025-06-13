@@ -145,7 +145,7 @@ function Page() {
   if (!exercise && !isLoading) return <span className="m-auto">{"Could not find exercise 🤷🏾‍♂️"}</span>;
 
   return (
-    <div className="py-8 px-56">
+    <div className="py-8 px-96 md:px-52 sm:px-4">
       <div className="grid grid-cols-1">
         {exercise?.exercises.map((question: Question, idx) => (
           <div key={`${question}${idx}`}>
